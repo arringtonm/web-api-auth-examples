@@ -154,12 +154,19 @@
               else { return null }
             }
 
+            let count = 0;
+            const timedLookup = window.setInterval(() => {
+              runGetSpecifics()
+            }, 200);
+
             function runGetSpecifics () {
-              if (tracks.length > 0) {
-                getSpecifics(tracks[0]);
-                getSpecifics(tracks[1]);
-                getSpecifics(tracks[2]);
-                getSpecifics(tracks[3]);
+              // placeholder to not upset Spotify's API 
+              if (count > 10) {
+                clearInterval(timedLookup);
+                return;
+              } else {
+                getSpecifics(tracks[count]);
+                count++;
               }
             }
 

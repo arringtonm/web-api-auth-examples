@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>Playlist App</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
       #login, #loggedin {
@@ -115,7 +115,19 @@
                 }
             });
 
-            // new code 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // my code 
+
             let tracks = [];
             let nextURL = null;
 
@@ -139,6 +151,7 @@
                   if (response.next) {
                     sendRequest(response.next)
                   } else {
+                    // console.log(tracks);
                     runGetSpecifics();
                   }
 
@@ -163,12 +176,14 @@
               // placeholder to not upset Spotify's API 
               if (count > 10) {
                 clearInterval(timedLookup);
+                // console.log(tracks);
                 return;
               } else {
                 getSpecifics(tracks[count]);
                 count++;
               }
             }
+
 
             function getSpecifics (track) {
               $.ajax({
@@ -177,13 +192,20 @@
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-                  console.log(track.artist + ' - ' + track.title + ' (' + response.track.tempo.toFixed(0) + 'bpm) (' + pitches[response.track.key] + ' ' + majorOrMinor(response.track.mode) + ')');
+                  track.tempo = response.track.tempo.toFixed(0);
+                  track.key = response.track.key;
+                  track.mode = response.track.mode;
+                  // console.log(track);
                 }
               });
             }
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // end
 
 
+            
           } else {
               // render initial screen
               $('#login').show();

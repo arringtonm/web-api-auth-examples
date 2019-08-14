@@ -116,22 +116,33 @@
             });
 
             // new code 
-            
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me/tracks',
+            let trackIds = [];
+            let nextURL = null;
+
+            sendRequest('https://api.spotify.com/v1/me/tracks');
+
+            function sendRequest (url) {
+              $.ajax({
+                url: url,
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-                  // let trackList = [];
                   response.items.forEach(function(song) {
+                    trackIds.push(song.track.id);
                     let artist = song.track.artists[0].name;
                     let title = song.track.name;
                     console.log(artist + ' - ' + title);
                   });
-                  // console.log(trackList) 
+
+                  if (response.next) {
+                    sendRequest(response.next)
+                  }
+
                 }
-            });
+              });
+            }
+          
 
           } else {
               // render initial screen

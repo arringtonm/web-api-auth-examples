@@ -116,7 +116,7 @@
             });
 
             // new code 
-            let trackIds = [];
+            let tracks = [];
             let nextURL = null;
 
             sendRequest('https://api.spotify.com/v1/me/tracks');
@@ -129,20 +129,53 @@
                 },
                 success: function(response) {
                   response.items.forEach(function(song) {
-                    trackIds.push(song.track.id);
-                    let artist = song.track.artists[0].name;
-                    let title = song.track.name;
-                    console.log(artist + ' - ' + title);
+                    tracks.push({ 
+                      id: song.track.id,
+                      artist: song.track.artists[0].name,
+                      title: song.track.name
+                    });
                   });
 
                   if (response.next) {
                     sendRequest(response.next)
+                  } else {
+                    runGetSpecifics();
                   }
 
                 }
               });
             }
-          
+
+            const pitches = ['C', 'C#"', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
+
+            function majorOrMinor (input) {
+              if (input === 0) { return 'min' }
+              else if (input === 1) { return 'maj' }
+              else { return null }
+            }
+
+            function runGetSpecifics () {
+              if (tracks.length > 0) {
+                getSpecifics(tracks[0]);
+                getSpecifics(tracks[1]);
+                getSpecifics(tracks[2]);
+                getSpecifics(tracks[3]);
+              }
+            }
+
+            function getSpecifics (track) {
+              $.ajax({
+                url: 'https://api.spotify.com/v1/audio-analysis/' + track.id,
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+                  console.log(track.artist + ' - ' + track.title + ' (' + response.track.tempo.toFixed(0) + 'bpm) (' + pitches[response.track.key] + ' ' + majorOrMinor(response.track.mode) + ')');
+                }
+              });
+            }
+
+
 
           } else {
               // render initial screen

@@ -117,14 +117,6 @@
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // my code 
 
@@ -151,8 +143,9 @@
                   if (response.next) {
                     sendRequest(response.next)
                   } else {
-                    // console.log(tracks);
-                    runGetSpecifics();
+                    // runGetSpecifics();
+                    getSpecifics(tracks[count]);
+
                   }
 
                 }
@@ -168,21 +161,22 @@
             }
 
             let count = 0;
-            const timedLookup = window.setInterval(() => {
-              runGetSpecifics()
-            }, 200);
+            // const timedLookup = window.setInterval(() => {
+            //   runGetSpecifics()
+            // }, 200);
 
-            function runGetSpecifics () {
-              // placeholder to not upset Spotify's API 
-              if (count > 10) {
-                clearInterval(timedLookup);
-                // console.log(tracks);
-                return;
-              } else {
-                getSpecifics(tracks[count]);
-                count++;
-              }
-            }
+            // function runGetSpecifics () {
+            //   // placeholder to not upset Spotify's API 
+            //   if (count > 10) {
+            //     clearInterval(timedLookup);
+            //     // console.log(tracks);
+            //     return;
+            //   } else {
+            //     getSpecifics(tracks[count]);
+            //     count++;
+            //   }
+            // }
+
 
 
             function getSpecifics (track) {
@@ -195,10 +189,30 @@
                   track.tempo = response.track.tempo.toFixed(0);
                   track.key = response.track.key;
                   track.mode = response.track.mode;
-                  // console.log(track);
+
+                  if (count >= 100) {
+                    sortTracks();
+                    return;
+                  } else {
+                    // console.log(track);
+                    count++;
+                    getSpecifics(tracks[count])
+                  }
                 }
               });
             }
+
+          function sortTracks () {
+            let sortedTracks = [];
+            tracks.forEach(function(song) {
+              if (song.key === 6 && song.mode === 0) {
+                sortedTracks.push(song);
+              }
+            });
+            sortedTracks.forEach(function(song) {
+              console.log(song);
+            })
+          }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -123,7 +123,9 @@
             let tracks = [];
             let nextURL = null;
 
-            sendRequest('https://api.spotify.com/v1/me/tracks');
+            // sendRequest('https://api.spotify.com/v1/me/tracks');
+            // sendRequest('https://api.spotify.com/v1/playlists/44RrTPi70vJYNUqlF3TGVz');
+            sendRequest('https://api.spotify.com/v1/playlists/6wjCvkAFovrVIRM8VfZLZG');
 
             function sendRequest (url) {
               $.ajax({
@@ -131,14 +133,25 @@
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
+                // success: function(response) {
                 success: function(response) {
-                  response.items.forEach(function(song) {
+                  console.log(response) 
+                  // response.items.forEach(function(song) {
+                  //   tracks.push({ 
+                  //     id: song.track.id,
+                  //     artist: song.track.artists[0].name,
+                  //     title: song.track.name
+                  //   });
+                  // });
+                  response.tracks.items.forEach(function(song) {
                     tracks.push({ 
                       id: song.track.id,
                       artist: song.track.artists[0].name,
                       title: song.track.name
                     });
                   });
+
+
 
                   if (response.next) {
                     sendRequest(response.next)
@@ -180,6 +193,7 @@
 
             function getSpecifics (track) {
               if (track) { 
+                console.log('[Getting ' + track + ']');
                 $.ajax({
                   url: 'https://api.spotify.com/v1/audio-analysis/' + track.id,
                   headers: {
@@ -208,7 +222,8 @@
           function sortTracks () {
             let sortedTracks = [];
             tracks.forEach(function(song) {
-              if (((song.key === 6) || (song.key == 8) || (song.key == 1)) && (song.mode === 0) && ((song.tempo >= 95 && song.tempo <= 105))) {
+              // if (((song.key === 6) || (song.key == 8) || (song.key == 1)) && (song.mode === 0) && ((song.tempo >= 95 && song.tempo <= 110))) {
+              if (song.tempo >= 95 && song.tempo <= 110) {
                 sortedTracks.push(song);
               }
             });
